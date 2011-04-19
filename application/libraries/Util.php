@@ -1,10 +1,9 @@
 <?php
 
 /**
- * @author Bennet Matschullat <bennet.matschullat@immonet.de>
+ * @author Bennet Matschullat <bennet.matschullat@giantmedia.de>
  * @since 25.03.2011 - 11:50:07
  */
-include_once 'models/ErrorCode.php';
 
 
 class Util {
