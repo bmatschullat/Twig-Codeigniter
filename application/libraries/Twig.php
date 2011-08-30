@@ -13,7 +13,7 @@ class Twig {
     protected $_template_dir;
     protected $_cache_dir;
     
-    private $ci;
+    private $_ci;
     private $_twig_env;
     
     /**
@@ -21,8 +21,8 @@ class Twig {
      */
     public function __construct()
     {
-        $this->ci =& get_instance();
-        $this->ci->config->load(self::TWIG_CONFIG_FILE); // load config file
+        $this->_ci =& get_instance();
+        $this->_ci->config->load(self::TWIG_CONFIG_FILE); // load config file
         
         // set include path for twig
         ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . APPPATH . 'third_party/Twig');
@@ -33,18 +33,20 @@ class Twig {
         log_message('debug', 'twig autoloader loaded');
         
         // init paths
-        $this->_template_dir = $this->ci->config->item('template_dir');
-        $this->_cache_dir = $this->ci->config->item('cache_dir');
+        $this->_template_dir = $this->_ci->config->item('template_dir');
+        $this->_cache_dir = $this->_ci->config->item('cache_dir');
                 
         // load environment
         $loader = new Twig_Loader_Filesystem($this->_template_dir, $this->_cache_dir);
         $this->_twig_env = new Twig_Environment($loader);
+        
+        $this->_ciFunctionInit();
     }
 
     /**
      * render a twig template file
      * @param string $template template name
-     * @param array $data contains all varnames'
+     * @param array $data contains all varnames
      * @param boolean $return
      */
     public function render($template, $data = array(), $render = true)
@@ -54,4 +56,22 @@ class Twig {
         return ($render)?$template->render($data):$template;
     }
     
+    
+    /**
+     * @param string $template
+     * @param array $data
+     */
+    public function dislpay($template, $data = array())
+    {
+    	$obj = $this->_twig_env->loadTemplate($template);
+    	$this->_ci->output->set_output($obj->render($data));
+    }
+    
+    
+    public function _ciFunctionInit()
+    {
+    	$this->_twig_env->addFunction('base_url', new Twig_Function_Function('base_url'));
+    	$this->_twig_env->addFunction('site_url', new Twig_Function_Function('site_url'));
+    	$this->_twig_env->addFunction('current_url', new Twig_Function_Function('current_url'));
+    }
 }
