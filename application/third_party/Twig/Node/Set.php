@@ -13,8 +13,7 @@
  * Represents a set node.
  *
  * @package    twig
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
+ * @author     Fabien Potencier <fabien@symfony.com>
  */
 class Twig_Node_Set extends Twig_Node
 {
@@ -28,13 +27,13 @@ class Twig_Node_Set extends Twig_Node
      *
      * @param Twig_Compiler A Twig_Compiler instance
      */
-    public function compile($compiler)
+    public function compile(Twig_Compiler $compiler)
     {
         $compiler->addDebugInfo($this);
 
-        if (count($this->names) > 1) {
+        if (count($this->getNode('names')) > 1) {
             $compiler->write('list(');
-            foreach ($this->names as $idx => $node) {
+            foreach ($this->getNode('names') as $idx => $node) {
                 if ($idx) {
                     $compiler->raw(', ');
                 }
@@ -43,26 +42,26 @@ class Twig_Node_Set extends Twig_Node
             }
             $compiler->raw(')');
         } else {
-            if ($this['capture']) {
+            if ($this->getAttribute('capture')) {
                 $compiler
                     ->write("ob_start();\n")
-                    ->subcompile($this->values)
+                    ->subcompile($this->getNode('values'))
                 ;
             }
 
-            $compiler->subcompile($this->names, false);
+            $compiler->subcompile($this->getNode('names'), false);
 
-            if ($this['capture']) {
-                $compiler->raw(" = ob_get_clean()");
+            if ($this->getAttribute('capture')) {
+                $compiler->raw(" = new Twig_Markup(ob_get_clean())");
             }
         }
 
-        if (!$this['capture']) {
+        if (!$this->getAttribute('capture')) {
             $compiler->raw(' = ');
 
-            if (count($this->names) > 1) {
+            if (count($this->getNode('names')) > 1) {
                 $compiler->write('array(');
-                foreach ($this->values as $idx => $value) {
+                foreach ($this->getNode('values') as $idx => $value) {
                     if ($idx) {
                         $compiler->raw(', ');
                     }
@@ -71,7 +70,7 @@ class Twig_Node_Set extends Twig_Node
                 }
                 $compiler->raw(')');
             } else {
-                $compiler->subcompile($this->values);
+                $compiler->subcompile($this->getNode('values'));
             }
         }
 

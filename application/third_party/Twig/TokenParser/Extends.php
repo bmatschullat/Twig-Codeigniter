@@ -9,6 +9,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+/**
+ * Extends a template by another one.
+ *
+ * <pre>
+ *  {% extends "base.html" %}
+ * </pre>
+ */
 class Twig_TokenParser_Extends extends Twig_TokenParser
 {
     /**
@@ -21,7 +29,7 @@ class Twig_TokenParser_Extends extends Twig_TokenParser
     public function parse(Twig_Token $token)
     {
         if (null !== $this->parser->getParent()) {
-            throw new Twig_SyntaxError('Multiple extends tags are forbidden', $token->getLine());
+            throw new Twig_Error_Syntax('Multiple extends tags are forbidden', $token->getLine());
         }
         $this->parser->setParent($this->parser->getExpressionParser()->parseExpression());
 

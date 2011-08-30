@@ -9,6 +9,16 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+/**
+ * Includes a template.
+ *
+ * <pre>
+ *   {% include 'header.html' %}
+ *     Body
+ *   {% include 'footer.html' %}
+ * </pre>
+ */
 class Twig_TokenParser_Include extends Twig_TokenParser
 {
     /**
@@ -29,9 +39,16 @@ class Twig_TokenParser_Include extends Twig_TokenParser
             $variables = $this->parser->getExpressionParser()->parseExpression();
         }
 
+        $only = false;
+        if ($this->parser->getStream()->test(Twig_Token::NAME_TYPE, 'only')) {
+            $this->parser->getStream()->next();
+
+            $only = true;
+        }
+
         $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
 
-        return new Twig_Node_Include($expr, $variables, $token->getLine(), $this->getTag());
+        return new Twig_Node_Include($expr, $variables, $only, $token->getLine(), $this->getTag());
     }
 
     /**
