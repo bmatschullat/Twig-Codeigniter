@@ -72,6 +72,31 @@ class Twig {
     {
     	$this->_twig_env->addFunction('base_url', new Twig_Function_Function('base_url'));
     	$this->_twig_env->addFunction('site_url', new Twig_Function_Function('site_url'));
-    	$this->_twig_env->addFunction('current_url', new Twig_Function_Function('current_url'));
+    	$this->_twig_env->addFunction('current_url', new Twig_Function_Function('current_url'));    
+        
+    	// form functions
+    	$this->_twig_env->addFunction('form_open', new Twig_Function_Function('form_open'));
+    	$this->_twig_env->addFunction('form_hidden', new Twig_Function_Function('form_hidden'));
+    	$this->_twig_env->addFunction('form_input', new Twig_Function_Function('form_input'));
+    	$this->_twig_env->addFunction('form_password', new Twig_Function_Function('form_password'));
+    	$this->_twig_env->addFunction('form_upload', new Twig_Function_Function('form_upload'));
+    	$this->_twig_env->addFunction('form_textarea', new Twig_Function_Function('form_textarea'));
+    	$this->_twig_env->addFunction('form_dropdown', new Twig_Function_Function('form_dropdown'));
+    	$this->_twig_env->addFunction('form_multiselect', new Twig_Function_Function('form_multiselect'));
+    	$this->_twig_env->addFunction('form_fieldset', new Twig_Function_Function('form_fieldset'));
+    	$this->_twig_env->addFunction('form_fieldset_close', new Twig_Function_Function('form_fieldset_close'));
+    	$this->_twig_env->addFunction('form_checkbox', new Twig_Function_Function('form_checkbox'));
+    	$this->_twig_env->addFunction('form_radio', new Twig_Function_Function('form_radio'));
+    	$this->_twig_env->addFunction('form_submit', new Twig_Function_Function('form_submit'));
+    	$this->_twig_env->addFunction('form_label', new Twig_Function_Function('form_label'));
+    	$this->_twig_env->addFunction('form_reset', new Twig_Function_Function('form_reset'));
+    	$this->_twig_env->addFunction('form_button', new Twig_Function_Function('form_button'));
+    	$this->_twig_env->addFunction('form_close', new Twig_Function_Function('form_close'));
+    	$this->_twig_env->addFunction('form_prep', new Twig_Function_Function('form_prep'));
+    	$this->_twig_env->addFunction('set_value', new Twig_Function_Function('set_value'));
+    	$this->_twig_env->addFunction('set_select', new Twig_Function_Function('set_select'));
+    	$this->_twig_env->addFunction('set_checkbox', new Twig_Function_Function('set_checkbox'));
+    	$this->_twig_env->addFunction('set_radio', new Twig_Function_Function('set_radio'));
+    	$this->_twig_env->addFunction('form_open_multipart', new Twig_Function_Function('form_open_multipart'));
     }
 }
