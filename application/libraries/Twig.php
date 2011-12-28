@@ -61,7 +61,7 @@ class Twig {
      * @param string $template
      * @param array $data
      */
-    public function dislpay($template, $data = array())
+    public function display($template, $data = array())
     {
     	$obj = $this->_twig_env->loadTemplate($template);
     	$this->_ci->output->set_output($obj->render($data));
