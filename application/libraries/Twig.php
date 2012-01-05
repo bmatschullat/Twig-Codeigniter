@@ -1,7 +1,7 @@
 <?php if (!defined('BASEPATH')) {exit('No direct script access allowed');}
 
 /**
- * @author Bennet Matschullat <bennet.matschullat@giantmedia.de>
+ * @author Bennet Matschullat <hello@bennet-matschullat.com>
  * @since 07.03.2011 - 12:00:39
  */
 
