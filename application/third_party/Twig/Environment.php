@@ -17,7 +17,7 @@
  */
 class Twig_Environment
 {
-    const VERSION = '1.5.1';
+    const VERSION = '1.6.0';
 
     protected $charset;
     protected $loader;
@@ -617,6 +617,12 @@ class Twig_Environment
     public function addExtension(Twig_ExtensionInterface $extension)
     {
         $this->extensions[$extension->getName()] = $extension;
+        $this->parsers = null;
+        $this->visitors = null;
+        $this->filters = null;
+        $this->tests = null;
+        $this->functions = null;
+        $this->globals = null;
     }
 
     /**
@@ -627,6 +633,12 @@ class Twig_Environment
     public function removeExtension($name)
     {
         unset($this->extensions[$name]);
+        $this->parsers = null;
+        $this->visitors = null;
+        $this->filters = null;
+        $this->tests = null;
+        $this->functions = null;
+        $this->globals = null;
     }
 
     /**
@@ -659,12 +671,13 @@ class Twig_Environment
     public function addTokenParser(Twig_TokenParserInterface $parser)
     {
         $this->staging['token_parsers'][] = $parser;
+        $this->parsers = null;
     }
 
     /**
      * Gets the registered Token Parsers.
      *
-     * @return Twig_TokenParserInterface[] An array of Twig_TokenParserInterface instances
+     * @return Twig_TokenParserBrokerInterface A broker containing token parsers
      */
     public function getTokenParsers()
     {
@@ -721,6 +734,7 @@ class Twig_Environment
     public function addNodeVisitor(Twig_NodeVisitorInterface $visitor)
     {
         $this->staging['visitors'][] = $visitor;
+        $this->visitors = null;
     }
 
     /**
@@ -743,12 +757,13 @@ class Twig_Environment
     /**
      * Registers a Filter.
      *
-     * @param string               $name    The filter name
-     * @param Twig_FilterInterface $visitor A Twig_FilterInterface instance
+     * @param string               $name   The filter name
+     * @param Twig_FilterInterface $filter A Twig_FilterInterface instance
      */
     public function addFilter($name, Twig_FilterInterface $filter)
     {
         $this->staging['filters'][$name] = $filter;
+        $this->filters = null;
     }
 
     /**
@@ -822,12 +837,13 @@ class Twig_Environment
     /**
      * Registers a Test.
      *
-     * @param string             $name    The test name
-     * @param Twig_TestInterface $visitor A Twig_TestInterface instance
+     * @param string             $name The test name
+     * @param Twig_TestInterface $test A Twig_TestInterface instance
      */
     public function addTest($name, Twig_TestInterface $test)
     {
         $this->staging['tests'][$name] = $test;
+        $this->tests = null;
     }
 
     /**
@@ -856,6 +872,7 @@ class Twig_Environment
     public function addFunction($name, Twig_FunctionInterface $function)
     {
         $this->staging['functions'][$name] = $function;
+        $this->functions = null;
     }
 
     /**
@@ -935,6 +952,7 @@ class Twig_Environment
     public function addGlobal($name, $value)
     {
         $this->staging['globals'][$name] = $value;
+        $this->globals = null;
     }
 
     /**
