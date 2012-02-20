@@ -68,6 +68,12 @@ class Twig {
     }
     
     
+    public function registerFunction($name, Twig_FunctionInterface $function)
+    {
+    	$this->_twig_env->addFunction($name, $function);
+    }
+    
+    
     public function _ciFunctionInit()
     {
     	$this->_twig_env->addFunction('base_url', new Twig_Function_Function('base_url'));
