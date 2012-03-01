@@ -16,6 +16,7 @@ class Twig_Extension_Core extends Twig_Extension
 {
     protected $dateFormats = array('F j, Y H:i', '%d days');
     protected $numberFormat = array(0, '.', ',');
+    protected $timezone = null;
 
     /**
      * Sets the default format to be used by the date filter.
@@ -42,6 +43,26 @@ class Twig_Extension_Core extends Twig_Extension
     public function getDateFormat()
     {
         return $this->dateFormats;
+    }
+
+    /**
+     * Sets the default timezone to be used by the date filter.
+     *
+     * @param DateTimeZone|string $timezone  The default timezone string or a DateTimeZone object
+     */
+    public function setTimezone($timezone)
+    {
+        $this->timezone = $timezone instanceof DateTimeZone ? $timezone : new DateTimeZone($timezone);
+    }
+
+    /**
+     * Gets the default timezone to be used by the date filter.
+     *
+     * @return DateTimeZone The default timezone currently in use
+     */
+    public function getTimezone()
+    {
+        return $this->timezone;
     }
 
     /**
@@ -159,7 +180,7 @@ class Twig_Extension_Core extends Twig_Extension
             'constant' => new Twig_Function_Function('constant'),
             'cycle'    => new Twig_Function_Function('twig_cycle'),
             'random'   => new Twig_Function_Function('twig_random', array('needs_environment' => true)),
-            'date'     => new Twig_Function_Function('twig_date_converter'),
+            'date'     => new Twig_Function_Function('twig_date_converter', array('needs_environment' => true)),
         );
     }
 
@@ -285,7 +306,7 @@ function twig_cycle($values, $i)
 /**
  * Returns a random value depending on the supplied parameter type:
  * - a random item from a Traversable or array
- * - a random character from a string 
+ * - a random character from a string
  * - a random integer between 0 and the integer parameter
  *
  * @param Twig_Environment             $env    A Twig_Environment instance
@@ -361,7 +382,7 @@ function twig_date_format_filter(Twig_Environment $env, $date, $format = null, $
         return $date->format($format);
     }
 
-    return twig_date_converter($date, $timezone)->format($format);
+    return twig_date_converter($env, $date, $timezone)->format($format);
 }
 
 /**
@@ -373,12 +394,13 @@ function twig_date_format_filter(Twig_Environment $env, $date, $format = null, $
  *    {% endif %}
  * </pre>
  *
+ * @param Twig_Environment    $env      A Twig_Environment instance
  * @param DateTime|string     $date     A date
  * @param DateTimeZone|string $timezone A timezone
  *
  * @return DateTime A DateTime instance
  */
-function twig_date_converter($date = null, $timezone = null)
+function twig_date_converter(Twig_Environment $env, $date = null, $timezone = null)
 {
     if ($date instanceof DateTime) {
         return $date;
@@ -399,6 +421,8 @@ function twig_date_converter($date = null, $timezone = null)
             $timezone = new DateTimeZone($timezone);
         }
 
+        $date->setTimezone($timezone);
+    } elseif (($timezone = $env->getExtension('core')->getTimezone()) instanceof DateTimeZone) {
         $date->setTimezone($timezone);
     }
 
@@ -550,10 +574,10 @@ function twig_slice(Twig_Environment $env, $item, $start, $length = null)
     $item = (string) $item;
 
     if (function_exists('mb_get_info') && null !== $charset = $env->getCharset()) {
-        return mb_substr($item, $start, $length, $charset);
+        return mb_substr($item, $start, null === $length ? mb_strlen($item, $charset) - $start : $length, $charset);
     }
 
-    return substr($item, $start, $length);
+    return null === $length ? substr($item, $start) : substr($item, $start, $length);
 }
 
 /**
@@ -684,6 +708,7 @@ function twig_in_filter($value, $compare)
         if (!strlen((string) $value)) {
             return empty($compare);
         }
+
         return false !== strpos($compare, (string) $value);
     } elseif (is_object($compare) && $compare instanceof Traversable) {
         return in_array($value, iterator_to_array($compare, false));
@@ -974,5 +999,6 @@ function twig_test_empty($value)
     if ($value instanceof Countable) {
         return 0 == count($value);
     }
+
     return false === $value || (empty($value) && '0' != $value);
 }

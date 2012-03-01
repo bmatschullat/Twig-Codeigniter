@@ -98,6 +98,8 @@ abstract class Twig_Template implements Twig_TemplateInterface
      */
     public function displayParentBlock($name, array $context, array $blocks = array())
     {
+        $name = (string) $name;
+
         if (isset($this->traits[$name])) {
             $this->traits[$name][0]->displayBlock($name, $context, $blocks);
         } elseif (false !== $parent = $this->getParent($context)) {
@@ -119,6 +121,8 @@ abstract class Twig_Template implements Twig_TemplateInterface
      */
     public function displayBlock($name, array $context, array $blocks = array())
     {
+        $name = (string) $name;
+
         if (isset($blocks[$name])) {
             $b = $blocks;
             unset($b[$name]);
@@ -189,7 +193,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
      */
     public function hasBlock($name)
     {
-        return isset($this->blocks[$name]);
+        return isset($this->blocks[(string) $name]);
     }
 
     /**
@@ -285,6 +289,14 @@ abstract class Twig_Template implements Twig_TemplateInterface
     /**
      * Returns a variable from the context.
      *
+     * This method is for internal use only and should never be called
+     * directly.
+     *
+     * This method should not be overriden in a sub-class as this is an
+     * implementation detail that has been introduced to optimize variable
+     * access for versions of PHP before 5.4. This is not a way to override
+     * the way to get a variable value.
+     *
      * @param array   $context           The context
      * @param string  $item              The variable to return from the context
      * @param Boolean $ignoreStrictCheck Whether to ignore the strict variable check or not
@@ -293,7 +305,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
      *
      * @throws Twig_Error_Runtime if the variable does not exist and Twig is running in strict mode
      */
-    protected function getContext($context, $item, $ignoreStrictCheck = false)
+    final protected function getContext($context, $item, $ignoreStrictCheck = false)
     {
         if (!array_key_exists($item, $context)) {
             if ($ignoreStrictCheck || !$this->env->isStrictVariables()) {
@@ -429,7 +441,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
 
         // hack to be removed when macro calls are refactored
         if ($object instanceof Twig_TemplateInterface) {
-            return new Twig_Markup($ret, $this->env->getCharset());
+            return $ret === '' ? '' : new Twig_Markup($ret, $this->env->getCharset());
         }
 
         return $ret;

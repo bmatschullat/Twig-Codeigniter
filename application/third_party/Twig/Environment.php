@@ -17,7 +17,7 @@
  */
 class Twig_Environment
 {
-    const VERSION = '1.6.0';
+    const VERSION = '1.7.0-DEV';
 
     protected $charset;
     protected $loader;
@@ -695,7 +695,7 @@ class Twig_Environment
                 foreach($parsers as $parser) {
                     if ($parser instanceof Twig_TokenParserInterface) {
                         $this->parsers->addTokenParser($parser);
-                    } else if ($parser instanceof Twig_TokenParserBrokerInterface) {
+                    } elseif ($parser instanceof Twig_TokenParserBrokerInterface) {
                         $this->parsers->addTokenParserBroker($parser);
                     } else {
                         throw new Twig_Error_Runtime('getTokenParsers() must return an array of Twig_TokenParserInterface or Twig_TokenParserBrokerInterface instances');
@@ -1036,8 +1036,13 @@ class Twig_Environment
 
     protected function writeCacheFile($file, $content)
     {
-        if (!is_dir(dirname($file))) {
-            mkdir(dirname($file), 0777, true);
+        $dir = dirname($file);
+        if (!is_dir($dir)) {
+            if (false === @mkdir($dir, 0777, true) && !is_dir($dir)) {
+                throw new RuntimeException(sprintf("Unable to create the cache directory (%s).", $dir));
+            }
+        } elseif (!is_writable($dir)) {
+            throw new RuntimeException(sprintf("Unable to write in the cache directory (%s).", $dir));
         }
 
         $tmpFile = tempnam(dirname($file), basename($file));
