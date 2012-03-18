@@ -137,6 +137,7 @@ class Twig_Extension_Core extends Twig_Extension
             'upper'      => new Twig_Filter_Function('strtoupper'),
             'lower'      => new Twig_Filter_Function('strtolower'),
             'striptags'  => new Twig_Filter_Function('strip_tags'),
+            'trim'       => new Twig_Filter_Function('trim'),
             'nl2br'      => new Twig_Filter_Function('nl2br', array('pre_escape' => 'html', 'is_safe' => array('html'))),
 
             // array helpers
@@ -379,6 +380,10 @@ function twig_date_format_filter(Twig_Environment $env, $date, $format = null, $
     }
 
     if ($date instanceof DateInterval || $date instanceof DateTime) {
+        if (null !== $timezone) {
+            $date->setTimezone($timezone instanceof DateTimeZone ? $timezone : new DateTimeZone($timezone));
+        }
+
         return $date->format($format);
     }
 
@@ -554,21 +559,22 @@ function twig_array_merge($arr1, $arr2)
 /**
  * Slices a variable.
  *
- * @param Twig_Environment $env    A Twig_Environment instance
- * @param mixed            $item   A variable
- * @param integer          $start  Start of the slice
- * @param integer          $length Size of the slice
+ * @param Twig_Environment $env          A Twig_Environment instance
+ * @param mixed            $item         A variable
+ * @param integer          $start        Start of the slice
+ * @param integer          $length       Size of the slice
+ * @param Boolean          $preserveKeys Whether to preserve key or not (when the input is an array)
  *
  * @return mixed The sliced variable
  */
-function twig_slice(Twig_Environment $env, $item, $start, $length = null)
+function twig_slice(Twig_Environment $env, $item, $start, $length = null, $preserveKeys = false)
 {
     if ($item instanceof Traversable) {
         $item = iterator_to_array($item, false);
     }
 
     if (is_array($item)) {
-        return array_slice($item, $start, $length);
+        return array_slice($item, $start, $length, $preserveKeys);
     }
 
     $item = (string) $item;
