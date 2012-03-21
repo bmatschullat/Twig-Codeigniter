@@ -3,6 +3,7 @@
 /**
  * @author Bennet Matschullat <hello@bennet-matschullat.com>
  * @since 07.03.2011 - 12:02:20
+ * @version 1.0
  */
 
  
