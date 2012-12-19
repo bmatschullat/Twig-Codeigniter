@@ -1,13 +1,13 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 /**
- * Library to wrap Twig layout engine. Originally from Bennet Matchullat.
+ * Library to wrap Twig layout engine. Originally from Bennet Matschullat.
  * Code cleaned up to CodeIgniter standards by Erik Torsner
  *
  * PHP Version 5.3
  *
  * @category Layout
  * @package  Twig
- * @author   Bennet Matschullat <hello@bennet-matschullat.com>
+ * @author   Bennet Matschullat <bennet@3mweb.de>
  * @author   Erik Torsner <erik@torgesta.com>
  * @license  Don't be a dick http://dontbeadick.com
  * @link     https://github.com/bmatschullat/Twig-Codeigniter
