@@ -9,7 +9,7 @@
  * @package  Twig
  * @author   Bennet Matschullat <bennet@3mweb.de>
  * @author   Erik Torsner <erik@torgesta.com>
- * @license  Don't be a dick http://dontbeadick.com
+ * @license  Don't be a dick http://www.dbad-license.org/
  * @link     https://github.com/bmatschullat/Twig-Codeigniter
  */
 
@@ -20,7 +20,7 @@
  * @package  Twig
  * @author   Bennet Matschullat <hello@bennet-matschullat.com>
  * @author   Erik Torsner <erik@torgesta.com>
- * @license  Don't be a dick http://dontbeadick.com
+ * @license  Don't be a dick http://www.dbad-license.org/
  * @link     https://github.com/bmatschullat/Twig-Codeigniter
  */
 class Twig {
